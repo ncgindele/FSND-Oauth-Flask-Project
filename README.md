@@ -1,12 +1,12 @@
 # Item Catalog - Udacity FSND
 This is a project for the Udacity Full-Stack Nanodegree program. It allows users to view, create, edit, and delete "items" containing a name, description, and icon. Items are organized by category, which users are free to edit as well. Login via Google or Facebook is required to modify entries. It was created using the following:
-*Flask
-*Vagrant
-*Python
-*Oauth2
-*Bootstrap
-*Popper.js
-*JQuery
+* Flask
+* Vagrant
+* Python
+* Oauth2
+* Bootstrap
+* Popper.js
+* JQuery
 
 ## Getting Started
 Running this web application requires a download and installation of the source code and a registration with the Google and Facebook Oauth APIs.
