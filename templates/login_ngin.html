@@ -1,0 +1,99 @@
+{% extends "base_public.html" %} {% block body %}
+
+
+<!-- GOOGLE PLUS SIGN IN (adapted from lesson 11.7)-->
+<div class="margin-auto centered">
+    <div class="login-card card margin-auto">
+        <div class="login-button">
+            <span class="g-signin" data-scope="openid email" data-clientid="116593271313-67bslbus5ttmvkfe3kna7f23t44ie84n.apps.googleusercontent.com" data-redirecturi="postmessage" data-accesstype="offline" data-cookiepolicy="single_host_origin" data-callback="signInCallback">
+            </span>
+        </div>
+        <fb:login-button class="login-button" scope="public_profile,email" onlogin="sendTokenToServer();">
+            <a href='javascript:sendTokenToServer()'>Login with Facebook</a>
+        </fb:login-button>
+        <div id="result"></div>
+    </div>
+</div>
+<script>
+    function signInCallback(authResult) {
+        if (authResult['code']) {
+            $('.login-button').attr('style', 'display: none');
+
+            // Pass one-time code to server, returns 'login successful' (if successful) then redirects to main page
+            $.ajax({
+                type: 'POST',
+                url: '/gconnect?state={{ STATE }}',
+                processData: false,
+                data: authResult['code'],
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Handle or verify the server response if necessary.
+                    if (result) {
+                        $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+                        setTimeout(function() {
+                            window.location.href = "/all";
+                        }, 3000);
+                    } else if (authResult['error']) {
+                        console.log('There was an error: ' + authResult['error']);
+                    } else {
+                        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                    }
+                }
+            });
+        }
+    }
+</script>
+<!--END GOOGLE PLUS SIGN IN -->
+
+<!--FACEBOOK SIGN IN
+Adapted from lesson 13.4 -->
+<script>
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '349920132132574',
+            cookie: true, // allow server to access session
+            xfbml: true, // parse social plugins
+            version: 'v2.8'
+        });
+    };
+    // Load the SDK asynchronously via AJAX
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    
+    function sendTokenToServer() {
+        $('.login-button').attr('style', 'display: none');
+        var access_token = FB.getAuthResponse()['accessToken'];
+        console.log(access_token)
+        console.log('Retrieving login information... ');
+        FB.api('/me', function(response) {
+            console.log('Logged in as: ' + response.name);
+            $.ajax({
+                type: 'POST',
+                url: '/fbconnect?state={{ STATE }}',
+                processData: false,
+                data: access_token,
+                contentType: 'application/octet-stream; charset=utf-8',
+                success: function(result) {
+                    // Process server response
+                    if (result) {
+                        $('#result').html('Login successful!</br>' + result + '</br>Redirecting...')
+                        setTimeout(function() {
+                            window.location.href = "/all";
+                        }, 4000);
+                    } else {
+                        $('#result').html('Login failed. Check configuration, console');
+                    }
+                }
+            });
+        });
+    }
+</script>
+<!--END FACEBOOK SIGN IN -->
+
+{% endblock %}

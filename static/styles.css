@@ -1,0 +1,136 @@
+.flash-messages li{
+    list-style-type: circle;
+    background-color: #eee;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 850px;
+}
+
+.input-container {
+    max-width: 850px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.card.login-card {
+    max-width: 500px;
+    height: 500px;
+    padding: 2em;
+    background: #bbb;
+}
+
+.login-button {
+    margin-top: 50px;
+}
+
+.margin-auto {
+    margin: 0 auto;
+}
+
+.form-group {
+    margin: 1em auto;
+}
+
+.form-control {
+    width: 400px;
+}
+
+.cat-name {
+    font-weight: bold;
+    margin-bottom: .5em;
+}
+
+.centered {
+    text-align: center;
+}
+
+label {
+    display: block;
+    text-align: right;
+    padding: .5em;
+}
+
+.cat-card {
+    min-height: 160px;
+    padding: 1.5em;
+    min-width: 250px;
+    margin-bottom: 1em;
+}
+
+.card-title {
+    color: rgb(33, 37, 41);
+    margin-bottom: 1em;
+}
+
+.category-links {
+    position: absolute;
+    bottom: 1.5em;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.card.grey-background {
+    background-color: rgba(0, 0, 0, .05);
+}
+
+.full-width {
+    width: 100%;
+}
+
+div.jumbotron>h1 {
+    word-spacing: -.33em;
+}
+
+div.jumbotron {
+    padding-bottom: 1em;
+}
+
+.img-thumbnail {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+.item-name {
+    padding: 1em 1em 2em 1em;
+    margin-bottom: -1em;
+}
+
+.item-link+.item-link {
+    margin-left: 1em;
+}
+
+.item-link {
+    border: 1px solid grey;
+    display: inline-block;
+    margin-left: 1em;
+}
+
+.new-item-card {
+    background-color: #e9ecef;
+    margin-bottom: 1em;
+}
+
+.left-buffer {
+    margin-left: 30px;
+}
+
+.singlet {
+    padding: 1em;
+}
+
+.black {
+    color: rgb(33, 37, 41);
+}
+
+.plus {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: none;
+}

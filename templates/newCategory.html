@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="input-container">
+<h2>New Category</h2>
+<hr />
+<form action="#" method="post">
+<table class="form-group">
+    <tr>
+        <th>
+            <label for="name">Name</label>
+        </th>
+        <td>
+            <input type="text" maxlength="250" name="name" class="form-control" />
+        </td>
+    </tr>
+</table>
+<button type="submit" class="btn btn-primary" id="submit">Submit</button>
+<a href={{ url_for('showCategories') }} class="btn btn-primary">Cancel</a>
+</form>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %} {% block body %}
+<div class="container">
+    <div class="row full-width  justify-content-center">
+        <div class="full-width cat-name text-center">
+            <hr />
+            <h1><em>{{ user.name }}</em>'s Items</h1>
+            <hr />
+        </div>
+    </div>
+    <div class="row full-width justify-content-center">
+        <div id="accordion" role="tablist" class="full-width">
+
+            {% for item in items %}
+            <div class="card">
+                <div class="card-header" role="tab" id="{{ item.id }}">
+                    <a data-toggle="collapse" href="#collapse{{ item.id }}" aria-expanded="true" aria-controls="collapse{{ item.id }}">
+                <img src="{{ item.icon }}" alt="{{ item.name }}" class="img-thumbnail float-left" height="100" width="100">
+                <h3 class="item-name">{{ item.name }} - ({{ item.year }})</h3>
+                <a href="{{ url_for('deleteItem', item_id=item.id)}}" class="btn btn-default btn-sm float-right item-link">Delete</a>
+                    <a href="{{ url_for('editItem', item_id=item.id)}}" class="btn btn-default btn-sm float-right item-link">Edit</a>
+                    </a>
+                </div>
+                <div id="collapse{{ item.id }}" class="collapse" role="tabpanel" aria-labelledby="{{ item.id }}" data-parent="#accordion">
+                    <div class="card-body">
+                        <p>{{ item.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="row full-width justify-content-center">
+        <div class="full-width">
+            <div class="card new-item-card">
+                <div class="card-header">
+                    <a href="{{ url_for('newItem') }}">
+                        <h3 class="black text-center"><span class="plus">+</span> Add New Item</h3>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="row justify-content-center">
+    <br />
+    <div class="card col-10 col-sm-8 col-md-6 col-lg-4 col-xl-3 align-middle">
+        <div class="card-block singlet">
+            <h4 class="card-title text-center">Are you sure you want to delete '<em>{{ category.name }}</em>'?</h4>
+            <br />
+            <form method="post" class="text-center">
+                <button type="submit" class="btn btn-danger" id="submit" type="submit">Delete</button>
+                <a href="{{ url_for('showItems', category_id=category.id )}}" class="btn btn-secondary left-buffer" role="button">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
