@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, jsonify, url_for, flash
+from functools import wraps
 from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, User, Category, Item
@@ -27,6 +28,15 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+# Decarator function to require login by user
+
+def login_required(f):
+    @wraps(f)
+    def login_validation(*args, **kwargs):
+        if 'username' not in login_session:
+            return redirect(url_for('showLogin'))
+        return f(*args, **kwargs)
+    return login_validation
 
 # Display functions
 
@@ -52,8 +62,8 @@ def showItems(category_id):
     return render_template('showItems.html', category=cat, items=items,
                            current_user=login_session['user_id'])
 
-
 @app.route('/myitems')
+@login_required
 def myItems():
     # Displays the current user's items
     items = session.query(Item).filter_by(
@@ -65,9 +75,8 @@ def myItems():
 # Create, edit, delete functions
 
 @app.route('/category/new', methods=['GET', 'POST'])
+@login_required
 def newCategory():
-    if 'username' not in login_session:
-        return redirect('/login')
     if request.method != 'POST':
         return render_template('newCategory.html')
     cat = Category(name=request.form['name'], user_id=login_session['user_id'])
@@ -78,9 +87,8 @@ def newCategory():
 
 
 @app.route('/item/new', methods=['GET', 'POST'])
+@login_required
 def newItem():
-    if 'username' not in login_session:
-        return redirect('/login')
     if request.method != 'POST':
         cats = session.query(Category).order_by(Category.name)
         return render_template('newItem.html', categories=cats)
@@ -97,9 +105,8 @@ def newItem():
 
 
 @app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editCategory(category_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     cat = session.query(Category).filter_by(id=category_id).one()
     if cat.user_id != login_session['user_id']:
         returnScript = '''<script>function unauthorized() {alert('You are not
@@ -116,9 +123,8 @@ def editCategory(category_id):
 
 
 @app.route('/item/<int:item_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editItem(item_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     item = session.query(Item).filter_by(id=item_id).one()
     if item.user_id != login_session['user_id']:
         returnScript = '''<script>function unauthorized() {alert('You are not
@@ -141,9 +147,8 @@ def editItem(item_id):
 
 
 @app.route('/category/<int:category_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteCategory(category_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     cat = session.query(Category).filter_by(id=category_id).one()
     if cat.user_id != login_session['user_id']:
         returnScript = '''<script>function unauthorized() {alert('You are not
@@ -159,9 +164,8 @@ def deleteCategory(category_id):
 
 
 @app.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteItem(item_id):
-    if 'username' not in login_session:
-        return redirect('/login')
     item = session.query(Item).filter_by(id=item_id).one()
     if item.user_id != login_session['user_id']:
         returnScript = '''<script>function unauthorized() {alert('You are not
@@ -172,10 +176,11 @@ def deleteItem(item_id):
         return render_template('deleteItem.html', item=item,
                                user=login_session['user_id'])
     else:
+        cat_id = item.category_id
         session.delete(item)
         session.commit()
         flash('%s has been deleted' % item.name)
-        return redirect(url_for('showCategory', category_id=item.category_id))
+        return redirect(url_for('showCategory', category_id=cat_id))
 
 
 # Routing functions that return JSON objects
@@ -217,9 +222,9 @@ def logout():
             response = gdisconnect()
             if response:
                 return response
-        else:
-            flash("Successfully logged out")
-            return redirect(url_for('showCategories'))
+            else:
+                flash("Successfully logged out")
+                return redirect(url_for('showCategories'))
         if login_session['provider'] == 'facebook':
             fbdisconnect()
             flash("You are now logged out. Come back soon!")
